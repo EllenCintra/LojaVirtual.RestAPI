@@ -3,4 +3,4 @@ Criação autônoma de uma API REST nível 2 que executa funções de uma loja v
 
 Utilizando: Maven, Spring Web, Spring Data JPA, H2 Database
 
-Ainda não finalizado, criado apenas as Entidades.
+Projeto em andamento.
