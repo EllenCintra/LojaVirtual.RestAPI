@@ -17,18 +17,17 @@ public class ItemPedido {
 	private Pedido pedido;
 	@ManyToOne
 	private Produto produto;
-	private int quantidade;
+	private int quantidade = 1;
 	private BigDecimal valorTotalItem;
 	
-	 ItemPedido (Pedido ped, Produto prod, int qtde ) {
+	 public ItemPedido (Pedido ped, Produto prod) {
 		this.pedido = ped;
 		this.produto = prod;
-		this.quantidade = qtde;
-		calcularValorItem(this.produto, this.quantidade);
+		calcularValorItem();
 	}
 	
-	private void calcularValorItem(Produto produto2, int quantidade2) {
-		this.valorTotalItem = produto2.getPreco().multiply(new BigDecimal (quantidade2));
+	private void calcularValorItem() {
+		this.valorTotalItem = this.produto.getPreco().multiply(new BigDecimal(quantidade));
 	}
 
 	public Produto getProduto() {
@@ -36,14 +35,14 @@ public class ItemPedido {
 	}
 	public void setProduto(Produto produto) {
 		this.produto = produto;
-		this.valorTotalItem = produto.getPreco().multiply(new BigDecimal (this.quantidade));
+		calcularValorItem();
 	}
 	public int getQuantidade() {
 		return quantidade;
 	}
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
-		this.valorTotalItem = this.produto.getPreco().multiply(new BigDecimal (quantidade));
+		calcularValorItem();
 	}
 
 	public BigDecimal getValorTotalItem() {

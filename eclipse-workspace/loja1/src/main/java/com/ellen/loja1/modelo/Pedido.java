@@ -22,16 +22,15 @@ public class Pedido {
 	private Cliente cliente;
 	@OneToMany (mappedBy = "pedido", cascade = CascadeType.ALL)//mappedBy pq é um relacionamento bidirecional, ou seja, tbm está definido na entidade ItemPedido. Se não incluir o "mapped by) é criada uma outra tabela para este relacionamento
 	private List<ItemPedido> itensPedido = new ArrayList<>();
-	private LocalDate dataPedido;
-	private BigDecimal valorPedido;
+	private LocalDate dataPedido = LocalDate.now();
+	private BigDecimal valorPedido = BigDecimal.ZERO;
 	
-	public Pedido (Cliente cliente, LocalDate data) {
+	public Pedido (Cliente cliente) {
 		this.cliente = cliente;
-		this.dataPedido = data;
 	}
 	
-	public void adicionarItemAoPedido (Produto p, int quantidade) {
-		ItemPedido itemPedido = new ItemPedido (this, p, quantidade);
+	public void adicionarItemAoPedido (Produto produto) {
+		ItemPedido itemPedido = new ItemPedido (this, produto);
 		this.itensPedido.add(itemPedido);
 		this.valorPedido.add(itemPedido.getValorTotalItem());
 	}
