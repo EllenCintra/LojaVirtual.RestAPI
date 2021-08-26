@@ -17,38 +17,26 @@ public class ItemPedido {
 	private Pedido pedido;
 	@ManyToOne
 	private Produto produto;
-	private int quantidade = 1;
-	private BigDecimal valorTotalItem;
+	public int quantidade = 1;
+	public BigDecimal valorTotalItem;
 	
-	 public ItemPedido (Pedido ped, Produto prod) {
+	public ItemPedido (Pedido ped, Produto prod) {
 		this.pedido = ped;
 		this.produto = prod;
-		calcularValorItem();
-	}
-	
-	private void calcularValorItem() {
-		this.valorTotalItem = this.produto.getPreco().multiply(new BigDecimal(quantidade));
+		this.valorTotalItem = prod.getPreco();
+		pedido.itensPedido.add(this);
 	}
 
 	public Produto getProduto() {
 		return produto;
 	}
-	public void setProduto(Produto produto) {
-		this.produto = produto;
-		calcularValorItem();
-	}
+
 	public int getQuantidade() {
 		return quantidade;
-	}
-	public void setQuantidade(int quantidade) {
-		this.quantidade = quantidade;
-		calcularValorItem();
 	}
 
 	public BigDecimal getValorTotalItem() {
 		return valorTotalItem;
-	}
-	
-	
+	}	
 	
 }
