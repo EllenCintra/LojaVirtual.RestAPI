@@ -21,6 +21,8 @@ public class Pedido {
 	private long id;
 	@ManyToOne
 	private Cliente cliente;
+
+
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL) // mappedBy pq é um relacionamento bidirecional, ou seja,
 																// tbm está definido na entidade ItemPedido. Se não
 																// incluir o "mapped by) é criada uma outra tabela para
@@ -33,6 +35,10 @@ public class Pedido {
 		this.cliente = cliente;
 	}
 
+	public long getId() {
+		return id;
+	}
+	
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -52,4 +58,10 @@ public class Pedido {
 	public void setDataPedido(LocalDate dataPedido) {
 		this.dataPedido = dataPedido;
 	}
+
+
+	public BigDecimal getValorPedido() {
+		return valorPedido;
+	}
+	
 }
