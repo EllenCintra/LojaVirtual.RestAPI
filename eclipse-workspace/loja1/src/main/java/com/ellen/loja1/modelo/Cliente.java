@@ -10,8 +10,21 @@ public class Cliente {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+
 	private String nome;
 	private String email;
+	private String senha;
+
+	
+	public Cliente (String nome, String email) {
+		this.email = email;
+		this.nome = nome;
+	}
+	
+	public long getId() {
+		return id;
+	}
+
 	public String getNome() {
 		return nome;
 	}
@@ -30,6 +43,4 @@ public class Cliente {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	private String senha;
-
 }

@@ -2,6 +2,7 @@ package com.ellen.loja1.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +20,12 @@ import com.ellen.loja1.service.PedidoService;
 
 @RestController
 public class PedidoController {
-	
+		
+	@Autowired
 	private PedidoService pedidoService; 
+
 	
-	@RequestMapping ("/")
-	public String hello() {
-		return "Welcome to Palikir!";
-	}
-	
-	@RequestMapping ("/compras")
+	@RequestMapping ("/pedido")
 	@PostMapping
 	@Transactional
 	public String iniciarPedido (@RequestBody Produto produto, Cliente cliente) {
@@ -35,7 +33,7 @@ public class PedidoController {
 		return "Vamos as compras!";
 	}
 	
-	@RequestMapping ("/adicionarItemAoCarrinho")
+	@RequestMapping ("/itempedido")
 	@PostMapping
 	@Transactional
 	public String adicionarItemAoPedido (@RequestBody Pedido pedido, Produto produto) {
@@ -43,27 +41,27 @@ public class PedidoController {
 		return produto.getNome().concat(" adicionado ao carrinho!");
 	}
 	
-	@RequestMapping ("/meuCarrinho")
+	@RequestMapping ("/meupedido")
 	@GetMapping
 	public List<ItemPedido> meuCarrinho(@RequestBody Pedido pedido){
 		return pedido.getItensPedido();		
 	}
 	
-	@RequestMapping ("/meuCarrinho/addUnidade")
+	@RequestMapping ("/itempedido/addUnidade")
 	@PutMapping
 	@Transactional
 	public void adicionarUnidade (@RequestBody ItemPedido itemPedido) {
 		this.pedidoService.adicionarUnidade(itemPedido);
 	}
 	
-	@RequestMapping ("/meuCarrinho/removerUnidade")
+	@RequestMapping ("/itempedido/removerUnidade")
 	@PutMapping
 	@Transactional
 	public void removerUnidade (@RequestBody Pedido pedido, ItemPedido itemPedido) {
 		this.pedidoService.removerUnidade(pedido, itemPedido);
 	}
 	
-	@RequestMapping ("/meuCarrinho/removerItem")
+	@RequestMapping ("/itempedido/removerItem")
 	@DeleteMapping
 	@Transactional
 	public void RemoverItem (@RequestBody Pedido pedido, ItemPedido itemPedido) {

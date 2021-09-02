@@ -7,6 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import com.ellen.loja1.controller.dto.ProdutoDto;
 
 @Entity
 public class Produto {
@@ -19,9 +23,23 @@ public class Produto {
 	private String Descricao;
 	private BigDecimal preco;
 	
+	public Produto() {
+		
+	}
+	
+	public Produto(String nome, BigDecimal preco) {
+		this.nome = nome;
+		this.preco = preco;
+	}
+	
 	public String getNome() {
 		return nome;
 	}
+	
+	public long getId() {
+		return id;
+	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
@@ -42,6 +60,10 @@ public class Produto {
 	}
 	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
+	}
+	
+	public ProdutoDto toDto () {
+		return new ProdutoDto(this);
 	}
 
 }

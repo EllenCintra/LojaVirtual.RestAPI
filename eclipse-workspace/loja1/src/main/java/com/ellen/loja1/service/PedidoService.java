@@ -1,14 +1,27 @@
 package com.ellen.loja1.service;
 
 import java.math.BigDecimal;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.ellen.loja1.modelo.ItemPedido;
 import com.ellen.loja1.modelo.Pedido;
 import com.ellen.loja1.modelo.Produto;
+import com.ellen.loja1.reporitory.ItemPedidoRepository;
+import com.ellen.loja1.reporitory.PedidoRepository;
 
+@Service
 public class PedidoService {
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 
 	public void adicionarAoCarrinho(Pedido pedido, Produto produto) {
-		new ItemPedido(pedido, produto);
+		ItemPedido itemPedido = new ItemPedido(pedido, produto);
 	}
 	
 	public void adicionarUnidade(ItemPedido itemPedido) {

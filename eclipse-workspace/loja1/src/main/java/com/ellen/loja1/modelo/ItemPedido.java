@@ -27,6 +27,14 @@ public class ItemPedido {
 		pedido.itensPedido.add(this);
 	}
 
+	public long getId() {
+		return id;
+	}
+
+	public Pedido getPedido() {
+		return pedido;
+	}
+
 	public Produto getProduto() {
 		return produto;
 	}

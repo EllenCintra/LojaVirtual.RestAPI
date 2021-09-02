@@ -2,22 +2,25 @@ package com.ellen.loja1.controller.dto;
 
 import java.math.BigDecimal;
 
-import com.ellen.loja1.modelo.Pedido;
+import com.ellen.loja1.modelo.ItemPedido;
 import com.ellen.loja1.modelo.Produto;
 
 public class ItemPedidoDto {
 
 	private long id;
-	private Pedido pedido;
 	private Produto produto;
 	private int quantidade;
+	
+	public ItemPedidoDto(ItemPedido itemPedido) {
+		this.id = itemPedido.getId();
+		this.produto = itemPedido.getProduto();
+		this.quantidade = itemPedido.getQuantidade();
+	}
 	
 	public long getId() {
 		return id;
 	}
-	public Pedido getPedido() {
-		return pedido;
-	}
+
 	public Produto getProduto() {
 		return produto;
 	}
