@@ -16,16 +16,28 @@ public class ProdutoService {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 
-	public List<ProdutoDto> listarProdutos() {
-		return produtoRepository.findAll()
-				.stream()
-				.map(ProdutoDto::new)
-				.collect(Collectors.toList());
-	}
-
-	public ProdutoDto cadastrar (ProdutoDto produtoDto) {
+	public ProdutoDto cadastrar(ProdutoDto produtoDto) {
 		Produto produto = produtoDto.ofDto();
 		produtoRepository.save(produto);
 		return produto.toDto();
 	}
+	
+	public List<ProdutoDto> listarProdutos() {
+		return produtoRepository.findAll().stream().map(ProdutoDto::new).collect(Collectors.toList());
+	}
+
+	public ProdutoDto buscarId(Long id) {
+		return produtoRepository.getById(id).toDto();
+	}
+	
+	public ProdutoDto atualizar(Long id, ProdutoDto pDto) {
+		Produto p = produtoRepository.getById(id);
+		p.setCategoria(pDto.getCategoria());
+		p.setDescricao(pDto.getDescricao());
+		p.setNome(pDto.getNome());
+		p.setPreco(pDto.getPreco());
+		
+		return p.toDto();
+	}
+
 }
