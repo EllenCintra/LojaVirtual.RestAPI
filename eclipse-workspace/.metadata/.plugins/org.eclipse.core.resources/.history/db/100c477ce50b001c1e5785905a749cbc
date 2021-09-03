@@ -1,0 +1,5 @@
+package com.ellen.loja1.config.validacao;
+
+public class ErroDeFormularioDto {
+
+}

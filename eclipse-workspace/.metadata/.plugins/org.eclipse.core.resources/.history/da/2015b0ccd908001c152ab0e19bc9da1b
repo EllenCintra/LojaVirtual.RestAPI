@@ -1,0 +1,10 @@
+package com.ellen.loja1.controller.dto;
+
+import java.math.BigDecimal;
+
+public class ProdutoDto {
+
+	private Long id;
+	private String nome;
+	private BigDecimal preco;
+}

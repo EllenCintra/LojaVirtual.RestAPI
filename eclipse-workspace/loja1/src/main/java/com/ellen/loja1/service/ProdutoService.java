@@ -36,8 +36,13 @@ public class ProdutoService {
 		p.setDescricao(pDto.getDescricao());
 		p.setNome(pDto.getNome());
 		p.setPreco(pDto.getPreco());
-		
+		produtoRepository.save(p);
 		return p.toDto();
+	}
+
+	public void deletar(Long id) {
+		//Produto p = produtoRepository.getById(id);
+		produtoRepository.deleteById(id);
 	}
 
 }

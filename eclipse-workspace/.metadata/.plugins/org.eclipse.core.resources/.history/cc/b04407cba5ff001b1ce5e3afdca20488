@@ -1,0 +1,5 @@
+package br.com.ellen.loja.modelo;
+
+public class Cliente {
+
+}

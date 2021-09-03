@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  postgres-docker:
+    image: postgres
+    volumes:
+      - ./compose-util/docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - 5432:5432
+
+  adminer-docker:
+    image: adminer
+    restart: always
+    ports:
+      - 9000:8080
+    depends_on:
+      - postgres-docker
+
+  keycloak-docker:
+    image: jboss/keycloak
+    volumes:
+      - ./compose-util/keycloack-realm/smart-stock.json:/tmp/smart-stock.json
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres-docker
+      DB_DATABASE: keycloak
+      DB_USER: postgres
+      DB_SCHEMA: public
+      DB_PASSWORD: postgres
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: 123456
+      KEYCLOAK_IMPORT: "/tmp/smart-stock.json -Dkeycloak.profile.feature.upload_scripts=enabled"
+    ports:
+      - 9001:8080
+    depends_on:
+      - postgres-docker
+
+  spring-smart-stock-docker:
+    image: ericoh/spring-smart-stock
+    ports:
+      - "8080:8080"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"

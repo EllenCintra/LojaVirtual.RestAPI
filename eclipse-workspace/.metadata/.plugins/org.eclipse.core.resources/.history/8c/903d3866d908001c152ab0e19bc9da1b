@@ -1,0 +1,5 @@
+package com.ellen.loja1.controller.dto;
+
+public class ProdutoDto {
+
+}

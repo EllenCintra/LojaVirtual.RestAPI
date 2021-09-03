@@ -1,0 +1,2 @@
+CREATE DATABASE smart_stock;
+CREATE DATABASE keycloak;

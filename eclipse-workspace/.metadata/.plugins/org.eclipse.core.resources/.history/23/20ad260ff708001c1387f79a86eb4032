@@ -1,0 +1,20 @@
+package com.ellen.loja1.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.ellen.loja1.controller.dto.ProdutoDto;
+import com.ellen.loja1.modelo.Produto;
+import com.ellen.loja1.reporitory.ProdutoRepository;
+
+public class ProdutoService {
+
+	@Autowired
+	private ProdutoRepository produtoRepository;
+	
+	public List<ProdutoDto> listarProdutos() {
+		List<Produto> produtos = produtoRepository.findAll();
+		return ProdutoDto.converter(produtos);
+	}
+}

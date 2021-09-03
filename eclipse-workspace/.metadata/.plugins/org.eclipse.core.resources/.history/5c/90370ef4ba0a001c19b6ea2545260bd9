@@ -1,0 +1,40 @@
+package com.ellen.loja1.controller.dto;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.ellen.loja1.modelo.Produto;
+
+public class ProdutoDto {
+
+	private Long id;
+	private String nome;
+	private BigDecimal preco;
+	
+	public ProdutoDto() {
+		
+	}
+	
+	public ProdutoDto(Produto produto) {
+		this.id = produto.getId();
+		this.nome = produto.getNome();
+		this.preco = produto.getPreco();
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	public String getNome() {
+		return nome;
+	}
+	public BigDecimal getPreco() {
+		return preco;
+	}
+
+	public Produto ofDto() {
+		return new Produto(nome, preco);
+	}
+	
+	
+}
