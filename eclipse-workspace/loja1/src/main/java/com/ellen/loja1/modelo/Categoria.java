@@ -15,6 +15,10 @@ public class Categoria {
 	public Categoria() {
 		
 	}
+
+	public long getId() {
+		return id;
+	}
 	
 	public String getNome() {
 		return nome;

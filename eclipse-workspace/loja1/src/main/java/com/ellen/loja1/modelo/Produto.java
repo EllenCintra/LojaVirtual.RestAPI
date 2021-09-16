@@ -20,21 +20,19 @@ public class Produto {
 	private long id;
 	@NotNull @NotEmpty
 	private String nome;
-	@ManyToOne (cascade=CascadeType.PERSIST)
+	@ManyToOne (cascade=CascadeType.ALL)
 	private Categoria categoria;
 	private String descricao;
 	@NotNull
 	private BigDecimal preco;
-	
+
 	public Produto() {
-		
+	
 	}
 	
-	public Produto(String nome, BigDecimal preco, Categoria categoria, String descricao) {
+	public Produto(String nome, BigDecimal preco) {
 		this.nome = nome;
 		this.preco = preco;
-		this.categoria = categoria;
-		this.descricao = descricao;
 	}
 	
 	public String getNome() {

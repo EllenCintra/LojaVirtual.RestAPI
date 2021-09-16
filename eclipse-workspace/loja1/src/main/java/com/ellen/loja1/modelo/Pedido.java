@@ -15,13 +15,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.ellen.loja1.controller.dto.PedidoDto;
+
 @Entity
 public class Pedido {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Cliente cliente;
 
 
@@ -34,6 +36,10 @@ public class Pedido {
 	public BigDecimal valorPedido = BigDecimal.ZERO;
 	@Enumerated(EnumType.STRING)
 	private StatusPedido status = StatusPedido.EM_ABERTO;
+	
+	public Pedido() {
+		
+	}
 
 	public Pedido(Cliente cliente) {
 		this.cliente = cliente;
@@ -65,7 +71,7 @@ public class Pedido {
 
 
 	public BigDecimal getValorPedido() {
-		return valorPedido;
+		return this.valorPedido;
 	}
 	
 }

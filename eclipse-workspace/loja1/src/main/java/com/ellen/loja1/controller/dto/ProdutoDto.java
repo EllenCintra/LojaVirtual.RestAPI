@@ -2,7 +2,6 @@ package com.ellen.loja1.controller.dto;
 
 import java.math.BigDecimal;
 
-import com.ellen.loja1.modelo.Categoria;
 import com.ellen.loja1.modelo.Produto;
 
 public class ProdutoDto {
@@ -10,7 +9,6 @@ public class ProdutoDto {
 	private Long id; 
 	private String nome;
 	private BigDecimal preco;
-	private Categoria categoria;
 	private String descricao;
 
 	public ProdutoDto() {
@@ -21,7 +19,6 @@ public class ProdutoDto {
 		this.id = produto.getId();
 		this.nome = produto.getNome();
 		this.preco = produto.getPreco();
-		this.categoria = produto.getCategoria();
 		this.descricao = produto.getDescricao();
 	}
 
@@ -37,16 +34,13 @@ public class ProdutoDto {
 		return preco;
 	}
 
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
 	public String getDescricao() {
 		return descricao;
 	}
-
-	public Produto ofDto() {
-		return new Produto(nome, preco, categoria, descricao);
+	
+	public Produto ofDto(ProdutoDto dto) {
+		Produto p = new Produto(dto.nome, dto.preco); 
+		return p;
 	}
 
 }

@@ -6,4 +6,5 @@ import com.ellen.loja1.modelo.Categoria;
 
 public interface CategoriaRepository extends JpaRepository<Categoria, Long>{
 
+	Categoria findByNome(String nome);
 }

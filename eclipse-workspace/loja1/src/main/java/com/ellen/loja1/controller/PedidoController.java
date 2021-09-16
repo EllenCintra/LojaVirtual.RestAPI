@@ -3,69 +3,64 @@ package com.ellen.loja1.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ellen.loja1.modelo.Cliente;
-import com.ellen.loja1.modelo.ItemPedido;
-import com.ellen.loja1.modelo.Pedido;
-import com.ellen.loja1.modelo.Produto;
+import com.ellen.loja1.controller.dto.ClienteDto;
+import com.ellen.loja1.controller.dto.PedidoDto;
+import com.ellen.loja1.controller.dto.ProdutoDto;
 import com.ellen.loja1.service.PedidoService;
 
 @RestController
+@RequestMapping("pedido")
 public class PedidoController {
 		
 	@Autowired
 	private PedidoService pedidoService; 
 
-	
-	@RequestMapping ("/pedido")
 	@PostMapping
 	@Transactional
-	public String iniciarPedido (@RequestBody Produto produto, Cliente cliente) {
-		new Pedido(cliente);
-		return "Vamos as compras!";
+	public ResponseEntity<PedidoDto> iniciarPedido (@RequestBody ClienteDto clienteDto) {
+		return new ResponseEntity<>(pedidoService.novoPedido(clienteDto), HttpStatus.CREATED);
 	}
 	
-	@RequestMapping ("/itempedido")
-	@PostMapping
-	@Transactional
-	public String adicionarItemAoPedido (@RequestBody Pedido pedido, Produto produto) {
-		this.pedidoService.adicionarAoCarrinho(pedido, produto);
-		return produto.getNome().concat(" adicionado ao carrinho!");
-	}
-	
-	@RequestMapping ("/meupedido")
 	@GetMapping
-	public List<ItemPedido> meuCarrinho(@RequestBody Pedido pedido){
-		return pedido.getItensPedido();		
+	public List<PedidoDto> listarPedidos(){
+		return pedidoService.listarPedidos();		
 	}
 	
-	@RequestMapping ("/itempedido/addUnidade")
-	@PutMapping
+	@PutMapping("/{id}")
 	@Transactional
-	public void adicionarUnidade (@RequestBody ItemPedido itemPedido) {
-		this.pedidoService.adicionarUnidade(itemPedido);
+	public ResponseEntity<PedidoDto> adicionarItemAoPedido (@PathVariable Long id, @RequestBody ProdutoDto produtoDto) {
+		return new ResponseEntity<>(pedidoService.adicionarItemAoPedido(id, produtoDto), HttpStatus.OK);
 	}
 	
-	@RequestMapping ("/itempedido/removerUnidade")
-	@PutMapping
-	@Transactional
-	public void removerUnidade (@RequestBody Pedido pedido, ItemPedido itemPedido) {
-		this.pedidoService.removerUnidade(pedido, itemPedido);
-	}
+	/*
+	@GetMapping("/{pedidoId}")
+	public List<ItemPedidoDto> listarItens(@PathVariable Long pedidoId){
+		return pedidoService.listarItens(pedidoId);		
+	}*/
 	
-	@RequestMapping ("/itempedido/removerItem")
-	@DeleteMapping
+	/*
+	@PutMapping("/itemPedido/{id}")
 	@Transactional
-	public void RemoverItem (@RequestBody Pedido pedido, ItemPedido itemPedido) {
-		this.pedidoService.excluirItemDoCarrinho(pedido, itemPedido);
+	public ResponseEntity<PedidoDto> alterarQtde (@PathVariable Long id, @RequestBody ItemPedidoDto itemDto) {
+		return new ResponseEntity<>(pedidoService.alterarQtde(id, itemDto), HttpStatus.OK);
+	}*/
+	
+	@DeleteMapping("{pedidoId}/{itemPedidoId}")
+	@Transactional
+	public ResponseEntity<PedidoDto> RemoverItem (@PathVariable Long pedidoId, Long itemPedidoId) {
+		return new ResponseEntity<>(pedidoService.excluirItemDoCarrinho(pedidoId, itemPedidoId), HttpStatus.OK);
 	}
 	
 }

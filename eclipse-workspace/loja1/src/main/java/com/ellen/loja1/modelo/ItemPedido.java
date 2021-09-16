@@ -20,6 +20,10 @@ public class ItemPedido {
 	public int quantidade = 1;
 	public BigDecimal valorTotalItem;
 	
+	public ItemPedido() {
+		
+	}
+	
 	public ItemPedido (Pedido ped, Produto prod) {
 		this.pedido = ped;
 		this.produto = prod;
@@ -42,9 +46,12 @@ public class ItemPedido {
 	public int getQuantidade() {
 		return quantidade;
 	}
+	
+	public int setQuantidade(int qtde) {
+		return this.quantidade = qtde;
+	}
 
 	public BigDecimal getValorTotalItem() {
 		return valorTotalItem;
 	}	
-	
 }

@@ -4,34 +4,37 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-
-import com.ellen.loja1.modelo.Cliente;
-import com.ellen.loja1.modelo.ItemPedido;
 import com.ellen.loja1.modelo.Pedido;
 
 public class PedidoDto {
 
 	private long id;
-	private Cliente cliente;
-	private List<ItemPedido> itensPedido = new ArrayList<>();
+	private ClienteDto cliente;
+	private List<ItemPedidoDto> itensPedido = new ArrayList<>();
 	private LocalDate dataPedido;
 	private BigDecimal valorPedido;
 	
-	public PedidoDto(Pedido pedido) {
-		this.id = pedido.getId();
-		this.cliente = pedido.getCliente();
-		this.itensPedido = pedido.getItensPedido();
-		this.dataPedido = pedido.getDataPedido();
-		this.valorPedido = pedido.getValorPedido();
+	public PedidoDto() {
+		
 	}
 	
-	public Cliente getCliente() {
+	public PedidoDto(Pedido pedido) {
+		this.id = pedido.getId();
+		this.cliente = pedido.getCliente().toDto();
+		this.itensPedido = pedido.getItensPedido().stream().map(ItemPedidoDto::new).collect(Collectors.toList());
+		this.dataPedido = pedido.getDataPedido();
+		System.out.println("Valor que chegou no dto" + pedido.valorPedido);
+		this.valorPedido = pedido.getValorPedido();
+		System.out.println("Dto" + this.getValorPedido());
+	}
+	
+	public ClienteDto getCliente() {
 		return cliente;
 	}
 	
-	public List<ItemPedido> getItensPedido() {
+	public List<ItemPedidoDto> getItensPedido() {
 		return itensPedido;
 	}
 	
@@ -45,9 +48,5 @@ public class PedidoDto {
 	
 	public long getId() {
 		return id;
-	}
-	
-	public static Page<PedidoDto> converter(Page<Pedido> pedido){
-		return pedido.map(PedidoDto::new);
 	}
 }
