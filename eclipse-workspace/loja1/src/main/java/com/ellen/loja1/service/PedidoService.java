@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.ellen.loja1.controller.dto.ClienteDto;
 import com.ellen.loja1.controller.dto.ItemPedidoDto;
 import com.ellen.loja1.controller.dto.PedidoDto;
-import com.ellen.loja1.controller.dto.ProdutoDto;
 import com.ellen.loja1.modelo.Cliente;
 import com.ellen.loja1.modelo.ItemPedido;
 import com.ellen.loja1.modelo.Pedido;
@@ -50,40 +49,35 @@ public class PedidoService {
 	}
 	
 
-	public PedidoDto adicionarItemAoPedido(Long id, ProdutoDto produtoDto) {
-		Pedido pedido = pedidoRepository.getById(id);
-		Produto produto = produtoRepository.getById(produtoDto.getId());
+	public PedidoDto adicionarItemAoPedido(Long idPed, Long idProd) {
+		Pedido pedido = pedidoRepository.getById(idPed);
+		Produto produto = produtoRepository.getById(idProd);
 
 		ItemPedido itemPedido = new ItemPedido(pedido, produto); 
 		itemPedidoRepository.save(itemPedido);
 
-		pedido.valorPedido = pedido.valorPedido.add(itemPedido.valorTotalItem);
 		Pedido pedidoSalvo = pedidoRepository.save(pedido);
 		
-		System.out.println("Service " + pedidoSalvo.valorPedido);
-		
-		PedidoDto pedidoDto = new PedidoDto(pedidoSalvo);
-		System.out.println("Service dto " + pedidoDto.getValorPedido());
-		return pedidoDto;
+		return new PedidoDto(pedidoSalvo);
 	}
 
 	public PedidoDto excluirItemDoCarrinho(Long pedidoId, Long itemPedidoId) {
 
-		itemPedidoRepository.deleteById(itemPedidoId);
-
 		ItemPedido itemPedido = itemPedidoRepository.getById(itemPedidoId);
 		Pedido pedido = pedidoRepository.getById(pedidoId);
+		
 		pedido.getItensPedido().remove(itemPedido);
 		calcularValorPedido(pedido);
 		Pedido pedidoSalvo = pedidoRepository.save(pedido);
+		//itemPedidoRepository.deleteById(itemPedidoId);	
 
 		return new PedidoDto(pedidoSalvo);
 	}
-	/*
-	public PedidoDto alterarQtde(Long pedidoId, Long itemPedidoId, int qtde) {
+	
+	public PedidoDto alterarQtde(Long pedidoId, ItemPedidoDto itemDto) {
 
-		ItemPedido itemPedido = itemPedidoRepository.getById(itemPedidoId);
-		itemPedido.setQuantidade(qtde);
+		ItemPedido itemPedido = itemPedidoRepository.getById(itemDto.getId());
+		itemPedido.setQuantidade(itemDto.getQuantidade());
 		calcularValorItem(itemPedido);
 		itemPedidoRepository.save(itemPedido);
 
@@ -98,27 +92,34 @@ public class PedidoService {
 	private void calcularValorItem(ItemPedido itemPedido) {
 		itemPedido.valorTotalItem = itemPedido.getProduto().getPreco()
 				.multiply(new BigDecimal(itemPedido.getQuantidade()));
-	}*/
+	}
 
-	private Pedido calcularValorPedido(Pedido pedido) {
+	private void calcularValorPedido(Pedido pedido) {
 		//pedido.valorPedido = new BigDecimal(0);
 
 		List<ItemPedido> itens = pedido.getItensPedido();
 		itens.forEach(item -> {
 			pedido.valorPedido = pedido.valorPedido.add(item.valorTotalItem);
 		});
-		Pedido pedidoSalvo = pedidoRepository.save(pedido);
-		return pedidoSalvo;
 	}
 
-	public List<ItemPedidoDto> listarItens (Long pedidoId) {
+
+	public List<PedidoDto> listarPedidos(ClienteDto clienteDto) {
+		Cliente cliente = clienteRepository.getById(clienteDto.getId());
+		List<Pedido> pedidos = pedidoRepository.getByCliente_Id(cliente.getId());
+				
+		return pedidos.stream()
+				.map(PedidoDto::new)
+				.collect(Collectors.toList());
+	}
+
+
+	public List<ItemPedidoDto> listarItens(Long pedidoId) {
 		Pedido pedido = pedidoRepository.getById(pedidoId);
-		return pedido.getItensPedido().stream().map(ItemPedidoDto::new).collect(Collectors.toList());
-	}
-
-
-	public List<PedidoDto> listarPedidos() {
-		return pedidoRepository.findAll().stream().map(PedidoDto::new).collect(Collectors.toList());
+		List<ItemPedido> itens = pedido.getItensPedido();
+		return 	itens.stream()
+				.map(ItemPedidoDto::new)
+				.collect(Collectors.toList());
 	}
 
 }

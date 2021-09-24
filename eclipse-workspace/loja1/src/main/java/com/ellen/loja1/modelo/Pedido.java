@@ -15,8 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.ellen.loja1.controller.dto.PedidoDto;
-
 @Entity
 public class Pedido {
 

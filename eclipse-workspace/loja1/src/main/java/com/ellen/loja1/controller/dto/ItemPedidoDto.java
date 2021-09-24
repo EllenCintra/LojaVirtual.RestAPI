@@ -11,6 +11,10 @@ public class ItemPedidoDto {
 	private int quantidade;
 	private BigDecimal valorTotalItem;
 	
+	public ItemPedidoDto() {
+		
+	}
+	
 	public ItemPedidoDto(ItemPedido itemPedido) {
 		this.id = itemPedido.getId();
 		this.produto = itemPedido.getProduto().toDto();

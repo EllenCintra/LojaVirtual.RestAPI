@@ -25,9 +25,7 @@ public class PedidoDto {
 		this.cliente = pedido.getCliente().toDto();
 		this.itensPedido = pedido.getItensPedido().stream().map(ItemPedidoDto::new).collect(Collectors.toList());
 		this.dataPedido = pedido.getDataPedido();
-		System.out.println("Valor que chegou no dto" + pedido.valorPedido);
-		this.valorPedido = pedido.getValorPedido();
-		System.out.println("Dto" + this.getValorPedido());
+		this.valorPedido = pedido.valorPedido;
 	}
 	
 	public ClienteDto getCliente() {
@@ -43,7 +41,7 @@ public class PedidoDto {
 	}
 	
 	public BigDecimal getValorPedido() {
-		return valorPedido;
+		return this.valorPedido;
 	} 
 	
 	public long getId() {

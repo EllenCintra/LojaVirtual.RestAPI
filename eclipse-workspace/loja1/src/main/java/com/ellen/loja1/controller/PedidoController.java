@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ellen.loja1.controller.dto.ClienteDto;
+import com.ellen.loja1.controller.dto.ItemPedidoDto;
 import com.ellen.loja1.controller.dto.PedidoDto;
-import com.ellen.loja1.controller.dto.ProdutoDto;
 import com.ellen.loja1.service.PedidoService;
 
 @RestController
-@RequestMapping("pedido")
+@RequestMapping("pedidos")
 public class PedidoController {
 		
 	@Autowired
@@ -33,31 +33,31 @@ public class PedidoController {
 		return new ResponseEntity<>(pedidoService.novoPedido(clienteDto), HttpStatus.CREATED);
 	}
 	
-	@GetMapping
-	public List<PedidoDto> listarPedidos(){
-		return pedidoService.listarPedidos();		
+	@GetMapping("/meuspedidos")
+	public List<PedidoDto> listarPedidos(@RequestBody ClienteDto clienteDto){
+		return pedidoService.listarPedidos(clienteDto);		
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping("/{idPedido}/AdicionarProduto/{idProduto}")
 	@Transactional
-	public ResponseEntity<PedidoDto> adicionarItemAoPedido (@PathVariable Long id, @RequestBody ProdutoDto produtoDto) {
-		return new ResponseEntity<>(pedidoService.adicionarItemAoPedido(id, produtoDto), HttpStatus.OK);
+	public ResponseEntity<PedidoDto> adicionarItemAoPedido (@PathVariable Long idPedido, @PathVariable Long idProduto) {
+		return new ResponseEntity<>(pedidoService.adicionarItemAoPedido(idPedido, idProduto), HttpStatus.OK);
 	}
 	
-	/*
+	
 	@GetMapping("/{pedidoId}")
 	public List<ItemPedidoDto> listarItens(@PathVariable Long pedidoId){
 		return pedidoService.listarItens(pedidoId);		
-	}*/
+	}
 	
-	/*
-	@PutMapping("/itemPedido/{id}")
+	
+	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<PedidoDto> alterarQtde (@PathVariable Long id, @RequestBody ItemPedidoDto itemDto) {
 		return new ResponseEntity<>(pedidoService.alterarQtde(id, itemDto), HttpStatus.OK);
-	}*/
+	}
 	
-	@DeleteMapping("{pedidoId}/{itemPedidoId}")
+	@DeleteMapping("/{pedidoId}/{itemPedidoId}")
 	@Transactional
 	public ResponseEntity<PedidoDto> RemoverItem (@PathVariable Long pedidoId, Long itemPedidoId) {
 		return new ResponseEntity<>(pedidoService.excluirItemDoCarrinho(pedidoId, itemPedidoId), HttpStatus.OK);
