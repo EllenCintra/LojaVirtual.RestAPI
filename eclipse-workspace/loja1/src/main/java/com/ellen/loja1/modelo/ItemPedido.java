@@ -29,7 +29,6 @@ public class ItemPedido {
 		this.produto = prod;
 		this.valorTotalItem = prod.getPreco();
 		pedido.itensPedido.add(this);
-		pedido.valorPedido = pedido.valorPedido.add(valorTotalItem);
 	}
 
 	public long getId() {

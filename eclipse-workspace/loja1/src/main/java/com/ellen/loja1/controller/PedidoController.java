@@ -33,33 +33,31 @@ public class PedidoController {
 		return new ResponseEntity<>(pedidoService.novoPedido(clienteDto), HttpStatus.CREATED);
 	}
 	
+	@PostMapping("/{idPedido}/AdicionarProduto/{idProduto}")
+	@Transactional
+	public ResponseEntity<PedidoDto> adicionarItemAoPedido (@PathVariable Long idPedido, @PathVariable Long idProduto) {
+		return new ResponseEntity<>(pedidoService.adicionarItemAoPedido(idPedido, idProduto), HttpStatus.CREATED);
+	}
+	
 	@GetMapping("/meuspedidos")
 	public List<PedidoDto> listarPedidos(@RequestBody ClienteDto clienteDto){
 		return pedidoService.listarPedidos(clienteDto);		
 	}
-	
-	@PutMapping("/{idPedido}/AdicionarProduto/{idProduto}")
-	@Transactional
-	public ResponseEntity<PedidoDto> adicionarItemAoPedido (@PathVariable Long idPedido, @PathVariable Long idProduto) {
-		return new ResponseEntity<>(pedidoService.adicionarItemAoPedido(idPedido, idProduto), HttpStatus.OK);
-	}
-	
 	
 	@GetMapping("/{pedidoId}")
 	public List<ItemPedidoDto> listarItens(@PathVariable Long pedidoId){
 		return pedidoService.listarItens(pedidoId);		
 	}
 	
-	
-	@PutMapping("/{id}")
+	@PutMapping("/{pedidoId}")
 	@Transactional
-	public ResponseEntity<PedidoDto> alterarQtde (@PathVariable Long id, @RequestBody ItemPedidoDto itemDto) {
-		return new ResponseEntity<>(pedidoService.alterarQtde(id, itemDto), HttpStatus.OK);
+	public ResponseEntity<PedidoDto> alterarQtde (@PathVariable Long pedidoId, @RequestBody ItemPedidoDto itemDto) {
+		return new ResponseEntity<>(pedidoService.alterarQtde(pedidoId, itemDto), HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/{pedidoId}/{itemPedidoId}")
+	@DeleteMapping("/{pedidoId}/RemoverProduto/{itemPedidoId}")
 	@Transactional
-	public ResponseEntity<PedidoDto> RemoverItem (@PathVariable Long pedidoId, Long itemPedidoId) {
+	public ResponseEntity<PedidoDto> RemoverItem (@PathVariable Long pedidoId, @PathVariable Long itemPedidoId) {
 		return new ResponseEntity<>(pedidoService.excluirItemDoCarrinho(pedidoId, itemPedidoId), HttpStatus.OK);
 	}
 	
