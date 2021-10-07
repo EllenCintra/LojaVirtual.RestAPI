@@ -1,6 +1,5 @@
 package com.ellen.loja1.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,60 +48,14 @@ public class PedidoService {
 	}
 
 	public PedidoDto adicionarItemAoPedido(Long idPed, Long idProd) {
+		
 		Pedido pedido = pedidoRepository.getById(idPed);
 		Produto produto = produtoRepository.getById(idProd);
 
 		ItemPedido itemPedido = new ItemPedido(pedido, produto);
 		itemPedidoRepository.save(itemPedido);
-
-		return calcularValorPedido(pedido);
-	}
-
-	public PedidoDto excluirItemDoCarrinho(Long pedidoId, Long itemPedidoId) {
-
-		ItemPedido itemPedido = itemPedidoRepository.getById(itemPedidoId);
-		Pedido pedido = pedidoRepository.getById(pedidoId);
-
-		pedido.getItensPedido().remove(itemPedido);
-		itemPedidoRepository.deleteById(itemPedidoId);
+		pedido.calcularValorPedido();
 		
-		return calcularValorPedido(pedido);
-	}
-
-	public PedidoDto alterarQtde(Long pedidoId, ItemPedidoDto itemDto) {
-
-		ItemPedido itemPedido = itemPedidoRepository.getById(itemDto.getId());
-		
-		if (itemDto.getQuantidade() <= 0) {
-			return excluirItemDoCarrinho(pedidoId, itemPedido.getId());
-		} else {
-			itemPedido.setQuantidade(itemDto.getQuantidade());
-			ItemPedido  p = itemPedidoRepository.save(itemPedido);
-			calcularValorItem(itemPedido);
-			System.out.println("Valor total item após save: " + p.valorTotalItem);
-
-			Pedido pedido = pedidoRepository.getById(pedidoId);
-			return calcularValorPedido(pedido);
-		}
-	}
-
-	private ItemPedidoDto calcularValorItem(ItemPedido itemPedido) {
-		itemPedido.valorTotalItem = new BigDecimal(0);
-		
-		itemPedido.valorTotalItem = itemPedido.getProduto().getPreco()
-				.multiply(new BigDecimal(itemPedido.getQuantidade()));
-		System.out.println("Valor Item no método" + itemPedido.valorTotalItem);
-		return new ItemPedidoDto(itemPedidoRepository.save(itemPedido));
-	}
-
-	private PedidoDto calcularValorPedido(Pedido pedido) {
-		pedido.valorPedido = new BigDecimal(0);
-
-		List<ItemPedido> itens = pedido.getItensPedido();
-		itens.forEach(item -> {
-			pedido.valorPedido = pedido.valorPedido.add(item.valorTotalItem);
-		});
-		System.out.println("Valor Pedido no método" + pedido.valorPedido);
 		return new PedidoDto(pedidoRepository.save(pedido));
 	}
 
@@ -117,6 +70,36 @@ public class PedidoService {
 		Pedido pedido = pedidoRepository.getById(pedidoId);
 		List<ItemPedido> itens = pedido.getItensPedido();
 		return itens.stream().map(ItemPedidoDto::new).collect(Collectors.toList());
+	}
+
+	public PedidoDto alterarQtde(Long pedidoId, ItemPedidoDto itemDto) {
+
+		ItemPedido itemPedido = itemPedidoRepository.getById(itemDto.getId());
+		
+		if (itemDto.getQuantidade() <= 0) {
+			return excluirItemDoCarrinho(pedidoId, itemPedido.getId());
+		} else {
+			itemPedido.setQuantidade(itemDto.getQuantidade());
+			itemPedido.calcularValorItem();
+			itemPedidoRepository.save(itemPedido);
+
+			Pedido pedido = pedidoRepository.getById(pedidoId);
+			pedido.calcularValorPedido();
+			
+			return new PedidoDto(pedidoRepository.save(pedido));
+		}
+	}
+
+	public PedidoDto excluirItemDoCarrinho(Long pedidoId, Long itemPedidoId) {
+
+		ItemPedido itemPedido = itemPedidoRepository.getById(itemPedidoId);
+		Pedido pedido = pedidoRepository.getById(pedidoId);
+
+		pedido.getItensPedido().remove(itemPedido);
+		itemPedidoRepository.deleteById(itemPedidoId);
+		pedido.calcularValorPedido();
+		
+		return new PedidoDto(pedidoRepository.save(pedido));
 	}
 
 }

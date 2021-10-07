@@ -25,7 +25,7 @@ public class PedidoDto {
 		this.cliente = pedido.getCliente().toDto();
 		this.itensPedido = pedido.getItensPedido().stream().map(ItemPedidoDto::new).collect(Collectors.toList());
 		this.dataPedido = pedido.getDataPedido();
-		this.valorPedido = pedido.valorPedido;
+		this.valorPedido = pedido.getValorPedido();
 	}
 	
 	public ClienteDto getCliente() {

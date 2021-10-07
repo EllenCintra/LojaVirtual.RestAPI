@@ -31,7 +31,7 @@ public class Pedido {
 																// este relacionamento
 	List<ItemPedido> itensPedido = new ArrayList<>();
 	private LocalDate dataPedido = LocalDate.now();
-	public BigDecimal valorPedido = BigDecimal.ZERO;
+	private BigDecimal valorPedido = BigDecimal.ZERO;
 	@Enumerated(EnumType.STRING)
 	private StatusPedido status = StatusPedido.EM_ABERTO;
 	
@@ -51,10 +51,6 @@ public class Pedido {
 		return cliente;
 	}
 
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
 	public List<ItemPedido> getItensPedido() {
 		return this.itensPedido;
 	}
@@ -63,13 +59,17 @@ public class Pedido {
 		return dataPedido;
 	}
 
-	public void setDataPedido(LocalDate dataPedido) {
-		this.dataPedido = dataPedido;
-	}
-
-
 	public BigDecimal getValorPedido() {
 		return this.valorPedido;
+	}
+	
+	public void calcularValorPedido() {
+		this.valorPedido = new BigDecimal(0);
+
+		List<ItemPedido> itens = this.getItensPedido();
+		itens.forEach(item -> {
+			this.valorPedido = this.valorPedido.add(item.getValorTotalItem());
+		});
 	}
 	
 }

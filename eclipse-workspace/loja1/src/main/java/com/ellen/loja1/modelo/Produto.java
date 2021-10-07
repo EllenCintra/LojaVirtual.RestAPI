@@ -46,21 +46,27 @@ public class Produto {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	
 	public Categoria getCategoria() {
 		return categoria;
 	}
+	
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
+	
 	public String getDescricao() {
 		return descricao;
 	}
+	
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+	
 	public BigDecimal getPreco() {
 		return preco;
 	}
+	
 	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
 	}
@@ -68,5 +74,4 @@ public class Produto {
 	public ProdutoDto toDto () {
 		return new ProdutoDto(this);
 	}
-
 }

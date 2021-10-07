@@ -17,8 +17,8 @@ public class ItemPedido {
 	private Pedido pedido;
 	@ManyToOne
 	private Produto produto;
-	public int quantidade = 1;
-	public BigDecimal valorTotalItem;
+	private int quantidade = 1;
+	private BigDecimal valorTotalItem;
 	
 	public ItemPedido() {
 		
@@ -54,4 +54,9 @@ public class ItemPedido {
 	public BigDecimal getValorTotalItem() {
 		return valorTotalItem;
 	}	
+	
+	public void calcularValorItem() {
+		this.valorTotalItem = this.getProduto().getPreco()
+				.multiply(new BigDecimal(this.quantidade));
+	}
 }
