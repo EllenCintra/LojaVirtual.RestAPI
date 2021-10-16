@@ -1,4 +1,4 @@
-package com.ellen.loja1.modelo;
+package com.ellen.loja1.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -6,13 +6,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Categoria {
+public class Category {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private String nome;
+	private String name;
 	
-	public Categoria() {
+	public Category() {
 		
 	}
 
@@ -20,11 +20,11 @@ public class Categoria {
 		return id;
 	}
 	
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
 	
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 }

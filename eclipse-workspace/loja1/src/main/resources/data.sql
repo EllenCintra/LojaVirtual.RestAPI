@@ -1,5 +1,5 @@
-INSERT INTO CLIENTE(nome, email, senha) VALUES('Ellen', 'ellen@email.com', '123456');
+INSERT INTO CLIENT (name, email, password) VALUES('Ellen', 'ellen@email.com', '123456');
 
-INSERT INTO CATEGORIA(nome) VALUES('Tênis');
-INSERT INTO PRODUTO(nome, categoria_id, preco) VALUES('Tênis Nike', 1, 200.00);
+INSERT INTO CATEGORY (name) VALUES('Tênis');
+INSERT INTO PRODUCT (name, category_id, price) VALUES('Tênis Nike', 1, 200.00);
 
