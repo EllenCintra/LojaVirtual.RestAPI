@@ -1,4 +1,4 @@
-package com.ellen.loja1.model.dto;
+package com.ellen.loja1.model.dto.client;
 
 import com.ellen.loja1.model.Client;
 

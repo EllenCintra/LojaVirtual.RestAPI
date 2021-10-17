@@ -5,41 +5,52 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.ellen.loja1.model.Category;
 import com.ellen.loja1.model.Product;
-import com.ellen.loja1.model.dto.ProductDto;
+import com.ellen.loja1.model.dto.product.ProductCreateUpdateDto;
+import com.ellen.loja1.model.dto.product.ProductDto;
+import com.ellen.loja1.model.mapper.ProductMapper;
+import com.ellen.loja1.reporitory.CategoryRepository;
 import com.ellen.loja1.reporitory.ProductRepository;
 
 @Service
 public class ProductService {
 
 	private ProductRepository productRepository;
-	
-	public ProductService (ProductRepository productRepository) {
+	private CategoryRepository categoryRepository;
+
+	public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
 		this.productRepository = productRepository;
+		this.categoryRepository = categoryRepository;
 	}
 	
 
-	public ProductDto insertProduct(ProductDto productDto) {
-		Product product = productDto.ofDto(productDto);
-		productRepository.save(product);
-		return product.toDto();
+	/*
+	 * No cadastro de Produto a categoria deveria ser selecionada dentre as já existentes, 
+	 * utilizando uma Select Box que busca as categorias direto no DB
+	 * Próxima a essa Select Box, haveria um botão "Criar nova Categoria" que redicionaria para a página que cria novas categorias
+	 */
+	public ProductDto insertProduct(ProductCreateUpdateDto productDto) {
+		Category category = categoryRepository.findByName(productDto.getCategory());
+		Product product = new Product();
+		ProductMapper.merge(product, productDto, category);
+		return new ProductDto(productRepository.save(product));
 	}
-	
+
 	public List<ProductDto> listProducts() {
 		return productRepository.findAll().stream().map(ProductDto::new).collect(Collectors.toList());
 	}
 
 	public ProductDto getProduct(Long id) {
-		return productRepository.getById(id).toDto();
+		return new ProductDto(productRepository.getById(id));
 	}
-	
-	public ProductDto updateProduct(Long id, ProductDto pDto) {
-		Product p = productRepository.getById(id);
-		p.setDescription(pDto.getDescription());
-		p.setName(pDto.getName());
-		p.setPrice(pDto.getPrice());
-		
-		return p.toDto();
+
+	public ProductDto updateProduct(Long id, ProductCreateUpdateDto pDto) {
+		Product product = productRepository.getById(id);
+		Category category = categoryRepository.findByName(pDto.getCategory());
+		ProductMapper.merge(product, pDto, category);
+
+		return new ProductDto(product);
 	}
 
 	public void deleteProduct(Long id) {

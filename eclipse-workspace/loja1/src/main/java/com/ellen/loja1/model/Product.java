@@ -11,8 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.ellen.loja1.model.dto.ProductDto;
-
 @Entity
 public class Product {
 	
@@ -21,8 +19,9 @@ public class Product {
 	@NotNull @NotEmpty
 	private String name;
 	@ManyToOne (cascade=CascadeType.ALL)
+	@NotNull
 	private Category category;
-	private String description;
+	private String details;
 	@NotNull
 	private BigDecimal price;
 
@@ -55,12 +54,12 @@ public class Product {
 		this.category = category;
 	}
 	
-	public String getDescription() {
-		return description;
+	public String getDetails() {
+		return details;
 	}
 	
-	public void setDescription(String descricao) {
-		this.description = descricao;
+	public void setDetails(String descricao) {
+		this.details = descricao;
 	}
 	
 	public BigDecimal getPrice() {
@@ -69,9 +68,5 @@ public class Product {
 	
 	public void setPrice(BigDecimal price) {
 		this.price = price;
-	}
-	
-	public ProductDto toDto () {
-		return new ProductDto(this);
 	}
 }

@@ -5,8 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.ellen.loja1.model.dto.ClientDto;
-
 @Entity
 public class Client {
 	
@@ -43,10 +41,5 @@ public class Client {
 	
 	public String getPassword() {
 		return password;
-	}
-	
-	public ClientDto toDto () {
-		
-		return new ClientDto(this);
 	}
 }

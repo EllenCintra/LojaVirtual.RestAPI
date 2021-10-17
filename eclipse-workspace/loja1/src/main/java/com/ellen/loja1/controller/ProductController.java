@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ellen.loja1.model.dto.ProductDto;
+import com.ellen.loja1.model.dto.product.ProductCreateUpdateDto;
+import com.ellen.loja1.model.dto.product.ProductDto;
 import com.ellen.loja1.service.ProductService;
 
 @RestController
@@ -29,7 +30,7 @@ public class ProductController {
 		this.productService = productService;
 	}
 
-	@GetMapping("todosprodutos")
+	@GetMapping("/todosprodutos")
 	public List<ProductDto> products() {
 		return productService.listProducts();
 	}
@@ -40,13 +41,13 @@ public class ProductController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ProductDto> insertProduct(@RequestBody @Valid/*Bean validation */ ProductDto productDto) {
+	public ResponseEntity<ProductDto> insertProduct(@RequestBody @Valid/*Bean validation */ ProductCreateUpdateDto productDto) {
 		return new ResponseEntity<>(productService.insertProduct(productDto), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductDto productDto) {
+	public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductCreateUpdateDto productDto) {
 		return new ResponseEntity<>(productService.updateProduct(id, productDto), HttpStatus.OK);
 	}
 

@@ -9,9 +9,10 @@ import com.ellen.loja1.model.Client;
 import com.ellen.loja1.model.Item;
 import com.ellen.loja1.model.Purchase;
 import com.ellen.loja1.model.Product;
-import com.ellen.loja1.model.dto.ClientDto;
-import com.ellen.loja1.model.dto.ItemDto;
-import com.ellen.loja1.model.dto.PurchaseDto;
+import com.ellen.loja1.model.dto.client.ClientDto;
+import com.ellen.loja1.model.dto.item.ItemDto;
+import com.ellen.loja1.model.dto.purchase.PurchaseCreateDto;
+import com.ellen.loja1.model.dto.purchase.PurchaseDto;
 import com.ellen.loja1.reporitory.ClientRepository;
 import com.ellen.loja1.reporitory.ItemRepository;
 import com.ellen.loja1.reporitory.PurchaseRepository;
@@ -32,28 +33,29 @@ public class PurchaseService {
 		this.clientRepository = clientRepository;
 	}
 
-	public PurchaseDto createPurchase(ClientDto clientDto) {
+	public PurchaseDto createPurchase(PurchaseCreateDto dto) {
 		// Verificar se tem pedido em aberto para o cliente em questão. Se não tiver,
 		// tem que criar um novo pedido.
 
-		Client client = clientRepository.getById(clientDto.getId());
+		Client client = clientRepository.getById(dto.getClient().getId());
 		Purchase purchase = new Purchase(client);
 
 		return new PurchaseDto(purchaseRepository.save(purchase));
 	}
 
-	public PurchaseDto addItem(Long idPurchase, Long idProduct) {
+	public PurchaseDto addItem(Long purchaseId, Long productId) {
 		
-		Purchase purchase = purchaseRepository.getById(idPurchase);
-		Product product = productRepository.getById(idProduct);
+		Purchase purchase = purchaseRepository.getById(purchaseId);
+		Product product = productRepository.getById(productId);
+			
+			Item item = new Item(purchase, product);
+			itemRepository.save(item);
+			purchase.calculatePurchaseValue();
 
-		Item item = new Item(purchase, product);
-		itemRepository.save(item);
-		purchase.calculatePurchaseValue();
-		
 		return new PurchaseDto(purchaseRepository.save(purchase));
 	}
 
+	//Colocar no ClientService
 	public List<PurchaseDto> listPurchase(ClientDto clientDto) {
 		Client client = clientRepository.getById(clientDto.getId());
 		List<Purchase> purchase = purchaseRepository.getByClient_Id(client.getId());
@@ -61,10 +63,9 @@ public class PurchaseService {
 		return purchase.stream().map(PurchaseDto::new).collect(Collectors.toList());
 	}
 
-	public List<ItemDto> listItems(Long purchaseId) {
+	public PurchaseDto getPurchase(Long purchaseId) {
 		Purchase purchase = purchaseRepository.getById(purchaseId);
-		List<Item> items = purchase.getItems();
-		return items.stream().map(ItemDto::new).collect(Collectors.toList());
+		return new PurchaseDto(purchase);
 	}
 
 	public PurchaseDto updateQuantity(Long purchaseId, ItemDto itemDto) {
