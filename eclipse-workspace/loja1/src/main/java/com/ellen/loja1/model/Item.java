@@ -24,11 +24,10 @@ public class Item {
 		
 	}
 	
-	public Item (Purchase ped, Product prod) {
-		this.purchase = ped;
+	public Item (Purchase pur, Product prod) {
+		this.purchase = pur;
 		this.product = prod;
 		this.valor = prod.getPrice();
-		purchase.items.add(this);
 	}
 
 	public long getId() {

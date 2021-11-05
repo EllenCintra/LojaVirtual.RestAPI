@@ -41,7 +41,7 @@ public class ProductController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ProductDto> insertProduct(@RequestBody @Valid/*Bean validation */ ProductCreateUpdateDto productDto) {
+	public ResponseEntity<ProductDto> insertProduct(@RequestBody @Valid ProductCreateUpdateDto productDto) {
 		return new ResponseEntity<>(productService.insertProduct(productDto), HttpStatus.CREATED);
 	}
 

@@ -25,8 +25,9 @@ public class PurchaseService {
 	private ItemRepository itemRepository;
 	private ProductRepository productRepository;
 	private ClientRepository clientRepository;
-	
-	public PurchaseService(PurchaseRepository purchaseRepository, ItemRepository itemRepository, ProductRepository productRepository, ClientRepository clientRepository) {
+
+	public PurchaseService(PurchaseRepository purchaseRepository, ItemRepository itemRepository,
+			ProductRepository productRepository, ClientRepository clientRepository) {
 		this.purchaseRepository = purchaseRepository;
 		this.itemRepository = itemRepository;
 		this.productRepository = productRepository;
@@ -34,28 +35,50 @@ public class PurchaseService {
 	}
 
 	public PurchaseDto createPurchase(PurchaseCreateDto dto) {
-		// Verificar se tem pedido em aberto para o cliente em questão. Se não tiver,
-		// tem que criar um novo pedido.
 
 		Client client = clientRepository.getById(dto.getClient().getId());
-		Purchase purchase = new Purchase(client);
-
-		return new PurchaseDto(purchaseRepository.save(purchase));
+		Purchase p = purchaseRepository.selectOpenPurchaseByClient(client.getId());// verifica se o cliente já tem um
+																					// pedido aberto
+		if (p == null) {
+			Purchase purchase = new Purchase(client);
+			return new PurchaseDto(purchaseRepository.save(purchase));
+		} else
+			return new PurchaseDto(p);
 	}
 
-	public PurchaseDto addItem(Long purchaseId, Long productId) {
-		
-		Purchase purchase = purchaseRepository.getById(purchaseId);
+	public PurchaseDto addItem(PurchaseCreateDto dto, Long productId) {
+
+		// Verficando se o cliente já tem um pedido em aberto
+		Client client = clientRepository.getById(dto.getClient().getId());
+		Purchase purchase = purchaseRepository.selectOpenPurchaseByClient(client.getId());// seleciona pedido em
+																							// aberto
+																							// para o cliente informado
+		if (purchase == null) {
+			purchase = new Purchase(client);
+		}
+
+		// Verificando se o produto já foi adicionado
 		Product product = productRepository.getById(productId);
-			
-			Item item = new Item(purchase, product);
-			itemRepository.save(item);
+		Item item = itemRepository.selectProductByPurchase(purchase.getId(), product.getId());// seleciona o item com
+																								// pedido e produto
+																								// informados
+		
+		System.out.println(item);
+		
+		if (item == null) {
+			item = new Item(purchase, product);
+			Item itemSalvo = itemRepository.save(item);
+			purchase.getItems().add(itemSalvo);
+			System.out.println(purchase.getItems());
 			purchase.calculatePurchaseValue();
+			purchaseRepository.save(purchase);
+		} else
+			System.out.println("Esse produto já está no carrinho!");
 
-		return new PurchaseDto(purchaseRepository.save(purchase));
+		return new PurchaseDto(purchase);
 	}
 
-	//Colocar no ClientService
+	// Colocar no ClientService
 	public List<PurchaseDto> listPurchase(ClientDto clientDto) {
 		Client client = clientRepository.getById(clientDto.getId());
 		List<Purchase> purchase = purchaseRepository.getByClient_Id(client.getId());
@@ -71,7 +94,7 @@ public class PurchaseService {
 	public PurchaseDto updateQuantity(Long purchaseId, ItemDto itemDto) {
 
 		Item item = itemRepository.getById(itemDto.getId());
-		
+
 		if (itemDto.getQuantity() <= 0) {
 			return deleteItem(purchaseId, item.getId());
 		} else {
@@ -81,7 +104,7 @@ public class PurchaseService {
 
 			Purchase purchase = purchaseRepository.getById(purchaseId);
 			purchase.calculatePurchaseValue();
-			
+
 			return new PurchaseDto(purchaseRepository.save(purchase));
 		}
 	}
@@ -94,7 +117,7 @@ public class PurchaseService {
 		purchase.getItems().remove(item);
 		itemRepository.deleteById(ItemId);
 		purchase.calculatePurchaseValue();
-		
+
 		return new PurchaseDto(purchaseRepository.save(purchase));
 	}
 

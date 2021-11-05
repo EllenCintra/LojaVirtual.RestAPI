@@ -1,5 +1,7 @@
 package com.ellen.loja1.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,14 +31,14 @@ public class PurchaseController {
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<PurchaseDto> createPurchase (@RequestBody PurchaseCreateDto dto) {
+	public ResponseEntity<PurchaseDto> createPurchase (@RequestBody @Valid PurchaseCreateDto dto) {
 		return new ResponseEntity<>(purchaseService.createPurchase(dto), HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/{purchaseId}/produto/{productId}")
+	@PostMapping("/produto/{productId}")
 	@Transactional
-	public ResponseEntity<PurchaseDto> addItem (@PathVariable Long purchaseId, @PathVariable Long productId) {
-		return new ResponseEntity<>(purchaseService.addItem(purchaseId, productId), HttpStatus.CREATED);
+	public ResponseEntity<PurchaseDto> addItem (@RequestBody @Valid PurchaseCreateDto dto, @PathVariable Long productId) {
+		return new ResponseEntity<>(purchaseService.addItem(dto, productId), HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/{purchaseId}")
